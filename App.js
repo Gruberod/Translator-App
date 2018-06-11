@@ -1,5 +1,9 @@
 import React from 'react';
-import { StyleSheet, Keyboard, Text, TextInput, Button, View } from 'react-native';
+import { StyleSheet, Keyboard, Text, TextInput, Image, View } from 'react-native';
+
+import backgroundImage from './assets/minions_background.jpg';
+import  MyButton from './Components/Button.js'
+import MyInput from './Components/Search.js';
 
 export default class App extends React.Component {
 
@@ -9,6 +13,10 @@ export default class App extends React.Component {
     translationFound: false
   }
 
+  handleChangeText = (toTranslate) => {
+    this.setState({toTranslate})
+  }
+  
   translate = () => {
 
     Keyboard.dismiss()
@@ -49,19 +57,16 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <TextInput
-        style={{width: 150, height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(toTranslate) => this.setState({toTranslate})}
-        value={this.state.toTranslate}
-
-      />
-        <Button
-          title="Translate"
-          onPress={this.translate}/>
+        <View style={{position: 'absolute', top: 0, left: 0, height: '100%', width: '100%', opacity: 0.1}}>
+          <Image source={backgroundImage} style={{flex: 1, height: null, width: null}}/>
+        </View>
+        <MyInput
+          value={this.state.toTranslate}
+          changeText={this.handleChangeText}/>
+        <MyButton translate={this.translate}/>
         <View>
         {this.renderContent()}
         </View>
-  
       </View>
     );
   }
@@ -73,5 +78,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
+  }
 });
