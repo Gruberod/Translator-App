@@ -1,38 +1,38 @@
 import React from 'react';
-import { StyleSheet, Keyboard, Text, TextInput, Image, View } from 'react-native';
+import { StyleSheet, Keyboard, Text, Image, View } from 'react-native';
 
-import backgroundImage from './assets/minions_background.jpg';
+import backgroundImage from './assets/chuck_image.jpg';
 import  MyButton from './Components/Button.js'
 import MyInput from './Components/Search.js';
 
 export default class App extends React.Component {
 
   state = {
-    toTranslate: '',
-    translation: '',
-    translationFound: false
+    keyWord: '',
+    quote: '',
+    quoteFound: false
   }
 
-  handleChangeText = (toTranslate) => {
-    this.setState({toTranslate})
+  handleChangeText = (keyWord) => {
+    this.setState({keyWord})
   }
   
-  translate = () => {
+  getQuote = () => {
 
     Keyboard.dismiss()
-    const string = this.state.toTranslate.toLowerCase();
+    const string = this.state.keyWord.toLowerCase();
 
-    return fetch('http://api.funtranslations.com/translate/minion.json?text='+string)
+    return fetch('https://api.chucknorris.io/jokes/search?query='+string)
       .then((response) => response.json())
       .then((responseJson) => {
 
-        var data = responseJson.contents.translated ? responseJson.contents.translated : false
+        var data = responseJson.result[0].value ? responseJson.result[0].value : false
         console.log(data)
 
         if (data) {
           this.setState({
-            translation: data,
-            translationFound: true
+            quote: data,
+            quoteFound: true
           })
         }
       })
@@ -42,13 +42,13 @@ export default class App extends React.Component {
   }
 
   renderContent = () => {
-    if(this.state.translation) {
-      return <View><Text>{this.state.translation}</Text></View>
+    if(this.state.quote) {
+      return <View><Text>{this.state.quote}</Text></View>
     }
     else {
       return (
       <View>
-        <Text>No translation found</Text>
+        <Text>No quote found</Text>
       </View>
       )}
   }
@@ -61,9 +61,9 @@ export default class App extends React.Component {
           <Image source={backgroundImage} style={{flex: 1, height: null, width: null}}/>
         </View>
         <MyInput
-          value={this.state.toTranslate}
+          value={this.state.keyWord}
           changeText={this.handleChangeText}/>
-        <MyButton translate={this.translate}/>
+        <MyButton getQuote={this.getQuote}/>
         <View>
         {this.renderContent()}
         </View>
