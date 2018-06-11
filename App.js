@@ -21,22 +21,47 @@ export default class App extends React.Component {
         var data = responseJson.contents.translated ? responseJson.contents.translated : false
         console.log(data)
 
-  })
-}
-  
+        if (data) {
+          this.setState({
+            translation: data,
+            translationFound: true
+          })
+        }
+      })
+        .catch((error) => {
+        console.error(error);
+    })
+  }
+
+  renderContent = () => {
+    if(this.state.translation) {
+      return <View><Text>{this.state.translation}</Text></View>
+    }
+    else {
+      return (
+      <View>
+        <Text>No translation found</Text>
+      </View>
+      )}
+  }
+
 
   render() {
     return (
       <View style={styles.container}>
         <TextInput
-        style={{marginTop: 150, width: 150, height: 40, borderColor: 'gray', borderWidth: 1}}
+        style={{width: 150, height: 40, borderColor: 'gray', borderWidth: 1}}
         onChangeText={(toTranslate) => this.setState({toTranslate})}
         value={this.state.toTranslate}
 
       />
         <Button
           title="Translate"
-          onPress={this.translate}/>/>
+          onPress={this.translate}/>
+        <View>
+        {this.renderContent()}
+        </View>
+  
       </View>
     );
   }
