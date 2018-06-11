@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, Button, View } from 'react-native';
+import { StyleSheet, Keyboard, Text, TextInput, Button, View } from 'react-native';
 
 export default class App extends React.Component {
 
@@ -10,8 +10,19 @@ export default class App extends React.Component {
   }
 
   translate = () => {
-    alert('translation in progress')
-  }
+
+    Keyboard.dismiss()
+    const string = this.state.toTranslate.toLowerCase();
+
+    return fetch('http://api.funtranslations.com/translate/minion.json?text='+string)
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+        var data = responseJson.contents.translated ? responseJson.contents.translated : false
+        console.log(data)
+
+  })
+}
   
 
   render() {
@@ -19,7 +30,9 @@ export default class App extends React.Component {
       <View style={styles.container}>
         <TextInput
         style={{marginTop: 150, width: 150, height: 40, borderColor: 'gray', borderWidth: 1}}
-        value=''
+        onChangeText={(toTranslate) => this.setState({toTranslate})}
+        value={this.state.toTranslate}
+
       />
         <Button
           title="Translate"
